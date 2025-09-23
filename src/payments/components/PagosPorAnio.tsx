@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import api from "../../services/api";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Printer } from "lucide-react";
 import { useReactToPrint } from "react-to-print";
@@ -64,6 +64,7 @@ export default function PagosPorAnio({ anio }: { anio: number }) {
     acc[key].pagos.push(pago);
     return acc;
   }, {} as Record<string, { cliente: Pago["client"]; pagos: Pago[] }>);
+  // ... resto del código igual
 
   return (
     <Card className="mt-6">
@@ -74,16 +75,29 @@ export default function PagosPorAnio({ anio }: { anio: number }) {
         </Button>
       </CardHeader>
 
-      <CardContent ref={printRef}>
-        {Object.values(pagosPorCliente).map(({ cliente, pagos }, idx, arr) => (
-          <PagosCliente
-            key={cliente.dui}
-            cliente={cliente}
-            pagos={pagos}
-            isLast={idx === arr.length - 1}
-          />
-        ))}
-      </CardContent>
+      {/* 🔹 Contenido oculto para impresión */}
+      <div className="hidden">
+        <div ref={printRef}>
+          {Object.values(pagosPorCliente).map(
+            ({ cliente, pagos }, idx, arr) => (
+              <PagosCliente
+                key={cliente.dui}
+                cliente={cliente}
+                pagos={pagos}
+                isLast={idx === arr.length - 1}
+              />
+            )
+          )}
+
+          {/* 🔹 Total general */}
+          <div className="mt-6 text-right border-t pt-4">
+            <h2 className="text-xl font-bold text-blue-800">
+              Total General: $
+              {pagos.reduce((sum, p) => sum + p.monto, 0).toFixed(2)}
+            </h2>
+          </div>
+        </div>
+      </div>
     </Card>
   );
 }

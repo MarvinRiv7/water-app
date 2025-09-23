@@ -11,7 +11,7 @@ import {
 
 import { loginSuccess } from "../features/authSlice";
 import api from "../../services/api";
-import { LoginForm, type LoginFormData } from "./LoginForm";
+import { LoginForm, type LoginFormData } from "../components/LoginForm";
 
 export default function LoginPage() {
   const dispatch = useDispatch();
