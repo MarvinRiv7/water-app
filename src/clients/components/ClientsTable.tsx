@@ -35,36 +35,40 @@ export default function ClientsTable({
       </CardHeader>
       <CardContent>
         {clients.length > 0 ? (
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-blue-100">
-                <TableHead>Nombre</TableHead>
-                <TableHead>DUI</TableHead>
-                <TableHead>Último Pago</TableHead>
-                <TableHead>Estado</TableHead>
-                <TableHead className="text-center">Acciones</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {clients.map((c) =>
-                editingClient && editingClient._id === c._id ? (
-                  <ClientRowEdit
-                    key={c._id}
-                    client={editingClient} // aquí ya sabemos que editingClient no es null
-                    setEditingClient={setEditingClient}
-                    handleSaveEdit={handleSaveEdit}
-                  />
-                ) : (
-                  <ClientRow
-                    key={c._id}
-                    client={c}
-                    setEditingClient={setEditingClient}
-                    handleDelete={handleDelete}
-                  />
-                )
-              )}
-            </TableBody>
-          </Table>
+          <div className="overflow-x-auto">
+            <Table className="min-w-max w-full">
+              <TableHeader>
+                <TableRow className="bg-blue-100">
+                  <TableHead>Nombre</TableHead>
+                  <TableHead>DUI</TableHead>
+                  <TableHead>Último Pago</TableHead>
+                  <TableHead>Estado</TableHead>
+                  <TableHead>Tipo de Pago</TableHead>
+                  <TableHead className="text-center">Acciones</TableHead>
+                </TableRow>
+              </TableHeader>
+
+              <TableBody>
+                {clients.map((c) =>
+                  editingClient && editingClient._id === c._id ? (
+                    <ClientRowEdit
+                      key={c._id}
+                      editingClient={editingClient}
+                      setEditingClient={setEditingClient}
+                      handleSaveEdit={handleSaveEdit}
+                    />
+                  ) : (
+                    <ClientRow
+                      key={c._id}
+                      client={c}
+                      setEditingClient={setEditingClient}
+                      handleDelete={handleDelete}
+                    />
+                  )
+                )}
+              </TableBody>
+            </Table>
+          </div>
         ) : (
           <div className="p-10 text-center text-gray-500">
             <p className="text-lg">No se encontraron clientes</p>

@@ -7,7 +7,6 @@ import YearSelector from "./YearSelector";
 import PagosPorAnio from "@/payments/components/PagosPorAnio";
 import api from "@/services/api";
 
-
 interface Stats {
   alDia: number;
   atrasados: number;
@@ -18,7 +17,8 @@ export default function Dashboard() {
   const [stats, setStats] = useState<Stats>({ alDia: 0, atrasados: 0 });
 
   useEffect(() => {
-    const fetchStats = () => api.get("/clients/stats").then(res => setStats(res.data));
+    const fetchStats = () =>
+      api.get("/clients/stats").then((res) => setStats(res.data));
     fetchStats();
     window.addEventListener("statsUpdated", fetchStats);
     return () => window.removeEventListener("statsUpdated", fetchStats);

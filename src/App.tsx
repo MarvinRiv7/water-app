@@ -5,9 +5,12 @@ import ClientsPage from "./clients/pages/ClientsPage";
 import Payments from "./payments/pages/Payments";
 import AddClientPage from "./clients/pages/AddClientsPage";
 import ProtectedLayout from "./layouts/ProtectedLayout";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
+    <>
+     <Toaster position="top-center" reverseOrder={false} />
     <Routes>
       {/* Login público */}
       <Route path="/login" element={<Login />} />
@@ -24,6 +27,7 @@ function App() {
       <Route path="*" element={<Navigate to="/" />} />
       
     </Routes>
+    </>
   );
 }
 

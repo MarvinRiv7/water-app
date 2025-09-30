@@ -23,18 +23,32 @@ export default function LoginPage() {
       dispatch(loginSuccess(res.data.token));
       toast.success("¡Inicio de sesión exitoso!");
       navigate("/");
-    } catch (err: any) {
-      const message = err?.response?.data?.error || "Error en login";
+    } catch (err: unknown) {
+      let message = "Error en login";
+      if (
+        err &&
+        typeof err === "object" &&
+        "response" in err &&
+        err.response &&
+        typeof err.response === "object" &&
+        "data" in err.response &&
+        err.response.data &&
+        typeof err.response.data === "object" &&
+        "error" in err.response.data
+      ) {
+        // @ts-expect-error: dynamic error shape from API
+        message = err.response.data.error || message;
+      }
       toast.error(message);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 px-4">
       <Toaster />
       <Card className="w-full max-w-md shadow-lg border border-gray-200">
         <CardHeader className="text-center">
-          <div className="mx-auto bg-gradient-to-r from-gray-500 to-gray-600 rounded-full p-4 shadow-md w-fit mb-3">
+          <div className="mx-auto bg-gradient-to-r from-gray-800 to-gray-800 rounded-full p-4 shadow-md w-fit mb-3">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-10 w-10 text-white"

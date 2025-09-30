@@ -1,9 +1,6 @@
-// src/clients/pages/Payments.tsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
-import dayjs from "dayjs";
-import { calcularMonto } from "../../utils/payments";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { AxiosError } from "axios";
@@ -12,8 +9,6 @@ import MesesDisponibles from "../components/MesesDisponibles";
 import ResumenPago from "../components/ResumenPago";
 import { AlertMsgDialog, ConfirmDialog } from "../components/Dialogs";
 import type { Mes, Client } from "@/types";
-
-// 🔹 Componentes
 
 export default function Payments() {
   const navigate = useNavigate();
@@ -24,11 +19,10 @@ export default function Payments() {
   const [client, setClient] = useState<Client | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Diálogos
   const [alertMsg, setAlertMsg] = useState<string | null>(null);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  // 🔹 Fetch de cliente y meses
+  // 🔹 Fetch cliente y meses desde backend
   const fetchMeses = async () => {
     if (!clientDui.trim()) return setAlertMsg("Ingrese un DUI válido");
     setLoading(true);
@@ -49,20 +43,11 @@ export default function Payments() {
       }
 
       const resMeses = await api.get<{
-        mesesDisponibles: { mes: number; anio: number }[];
+        mesesDisponibles: Mes[];
       }>(`/payments/${clientDui}/meses-disponibles`);
 
-      const hoy = dayjs();
-      const ultimoPago = dayjs(
-        `${clienteData.ultimoAnio}-${clienteData.ultimoMes}-01`
-      );
-
-      const mesesConMonto: Mes[] = resMeses.data.mesesDisponibles.map((m) => {
-        const monto = calcularMonto(m.anio, m.mes, ultimoPago, hoy);
-        return { ...m, monto };
-      });
-
-      setMesesDisponibles(mesesConMonto);
+      // Backend ya devuelve base, mora y monto
+      setMesesDisponibles(resMeses.data.mesesDisponibles);
       setSeleccionados([]);
     } catch (error) {
       const err = error as AxiosError<{ msg?: string }>;
@@ -112,11 +97,8 @@ export default function Payments() {
       setAlertMsg("Pago realizado con éxito ✅");
       window.dispatchEvent(new Event("statsUpdated"));
 
-      // Reset
-      setClientDui("");
-      setMesesDisponibles([]);
+      await fetchMeses();
       setSeleccionados([]);
-      setClient(null);
     } catch (error) {
       const err = error as AxiosError<{ msg?: string }>;
       setAlertMsg(err.response?.data?.msg || "Error al procesar pago ❌");
@@ -161,6 +143,7 @@ export default function Payments() {
         meses={mesesDisponibles}
         seleccionados={seleccionados}
         toggleMes={toggleMes}
+        
       />
 
       {/* Resumen y pagar */}

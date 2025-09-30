@@ -5,6 +5,12 @@ export interface Cliente {
   estado: string;
 }
 
+export interface Clientee extends Cliente {
+  _id: string;
+  estado: "Activo" | "Desconectado" | "Exonerado"; // refinamos el tipo
+}
+
+
 export interface Pago {
   _id: string;
   mes: number;
@@ -12,3 +18,4 @@ export interface Pago {
   monto: number;
   client: Cliente;
 }
+

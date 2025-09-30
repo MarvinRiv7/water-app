@@ -1,5 +1,8 @@
-import { Calendar } from "lucide-react";
+import { Calendar, AlertCircle, CheckCircle2, Clock } from "lucide-react";
 import { motion } from "framer-motion";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import type { Mes } from "@/types";
 
 type Props = {
@@ -17,59 +20,75 @@ export default function MesesDisponibles({
   const currentMonth = currentDate.getMonth() + 1;
   const currentYear = currentDate.getFullYear();
 
-  const getBadgeClass = (mes: Mes) => {
-    if (
-      mes.anio < currentYear ||
-      (mes.anio === currentYear && mes.mes < currentMonth)
-    )
-      return "bg-red-100 text-red-700 border border-red-300";
-    if (mes.anio === currentYear && mes.mes === currentMonth)
-      return "bg-green-100 text-green-700 border border-green-300";
-    return "bg-gray-200 text-gray-700 border border-gray-300";
+  const maxYear = 2027;
+  const mesesFiltrados = meses.filter((mes) => mes.anio <= maxYear);
+
+  const getBadgeVariant = (mes: Mes) => {
+    if (mes.anio < currentYear || (mes.anio === currentYear && mes.mes < currentMonth))
+      return "destructive"; // rojo
+    if (mes.anio === currentYear && mes.mes === currentMonth) return "default"; // verde
+    return "secondary"; // gris
   };
 
+  const getStatusIcon = (mes: Mes) => {
+    if (mes.anio < currentYear || (mes.anio === currentYear && mes.mes < currentMonth))
+      return <AlertCircle className="h-4 w-4 text-destructive" />;
+    if (mes.anio === currentYear && mes.mes === currentMonth)
+      return <CheckCircle2 className="h-4 w-4 text-green-600" />;
+    return <Clock className="h-4 w-4 text-gray-400" />;
+  };
+
+  const formatMonth = (mes: number) =>
+    new Date(0, mes - 1).toLocaleString("es-ES", { month: "short" });
+
   return (
-    <div className="bg-white rounded-2xl shadow-md border p-6">
-      <h3 className="flex gap-2 items-center text-gray-700 text-lg font-semibold mb-4">
-        <Calendar size={18} /> Meses Disponibles
-      </h3>
-      {meses.length === 0 ? (
-        <p className="text-gray-500 italic text-center">
-          No hay meses pendientes.
-        </p>
-      ) : (
-        <ul className="space-y-3">
-          {meses.map((mes, i) => {
-            const isSelected = seleccionados.some(
-              (m) => m.mes === mes.mes && m.anio === mes.anio
-            );
-            return (
-              <motion.li
-                key={i}
-                onClick={() => toggleMes(mes)}
-                className={`flex justify-between items-center px-5 py-3 border rounded-xl cursor-pointer transition ${
-                  isSelected
-                    ? "ring-2 ring-blue-400 bg-blue-50"
-                    : "hover:bg-gray-50"
-                }`}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <span className="font-medium">
-                  {mes.mes}-{mes.anio}
-                </span>
-                <span
-                  className={`px-3 py-1 rounded-full text-sm font-medium ${getBadgeClass(
-                    mes
-                  )}`}
-                >
-                  ${mes.monto}
-                </span>
-              </motion.li>
-            );
-          })}
-        </ul>
-      )}
-    </div>
+    <Card className="rounded-2xl shadow-md border">
+      <CardHeader className="flex items-center gap-2 pb-3">
+        <Calendar className="h-5 w-5 text-gray-600" />
+        <CardTitle className="text-lg text-gray-700">Meses Disponibles</CardTitle>
+      </CardHeader>
+
+      <CardContent className="p-2">
+        {mesesFiltrados.length === 0 ? (
+          <p className="text-gray-500 italic text-center">No hay meses pendientes.</p>
+        ) : (
+          <ScrollArea className="max-h-72">
+            <ul className="flex flex-wrap gap-2">
+              {mesesFiltrados.map((mes, i) => {
+                const isSelected = seleccionados.some(
+                  (m) => m.mes === mes.mes && m.anio === mes.anio
+                );
+                return (
+                  <motion.li
+                    key={i}
+                    onClick={() => toggleMes(mes)}
+                    className={`flex items-center gap-2 px-3 py-1 rounded-full cursor-pointer border transition text-sm ${
+                      isSelected
+                        ? "bg-primary/20 border-primary ring-1 ring-primary/50"
+                        : "bg-gray-50 border-gray-200 hover:bg-gray-100"
+                    }`}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.97 }}
+                  >
+                    {getStatusIcon(mes)}
+                    <span className="capitalize font-medium">
+                      {formatMonth(mes.mes)} {mes.anio}
+                    </span>
+                    <Badge
+                      variant={getBadgeVariant(mes)}
+                      className="text-xs px-2 py-0.5"
+                    >
+                      {mes.mora > 0
+                        ? `$${mes.base} + $${mes.mora} = $${mes.monto}`
+                        : `$${mes.monto}`}
+                    </Badge>
+                  </motion.li>
+                );
+              })}
+            </ul>
+          </ScrollArea>
+        )}
+      </CardContent>
+    </Card>
   );
 }

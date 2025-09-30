@@ -3,6 +3,8 @@ export type Mes = {
   mes: number;
   anio: number;
   monto: number;
+  mora: number
+  base: number
 };
 
 

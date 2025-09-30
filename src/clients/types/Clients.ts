@@ -7,4 +7,5 @@ export interface Client {
   ultimoAnio: number;
   lastPayment: { mes: number; anio: number };
   estado: "Activo" | "Desconectado" | "Exonerado";
+  pagoTipo: "maximo" | "medio" | "minimo";
 }

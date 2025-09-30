@@ -21,22 +21,29 @@ export default function ResumenPago({
 
   return (
     <motion.div
-      className="mt-8 bg-gradient-to-r from-green-100 to-green-200 border border-green-400 p-5 rounded-2xl shadow-lg flex justify-between items-center"
+      className="mt-6 p-5 rounded-2xl shadow-xl bg-gradient-to-tr from-green-50 via-green-100 to-green-200 border border-green-300 flex flex-col sm:flex-row justify-between items-center gap-4"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
     >
-      <p className="font-semibold text-green-700">
-        Total a pagar: <span className="text-xl font-bold">${totalPagar}</span>
-      </p>
+      {/* Información del pago */}
+      <div className="flex items-center gap-3">
+        <Wallet size={28} className="text-green-600" />
+        <div>
+          <p className="text-green-800 font-semibold">Total a pagar</p>
+          <p className="text-2xl font-bold text-green-900">${totalPagar}</p>
+        </div>
+      </div>
+
+      {/* Botón de pago */}
       <button
         onClick={onConfirm}
         disabled={loading}
-        className="flex gap-2 px-5 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 shadow disabled:opacity-50 items-center transition"
+        className="flex gap-3 items-center px-6 py-2 bg-green-600 text-white font-medium rounded-lg shadow-lg hover:bg-green-700 transition disabled:opacity-50"
       >
         {loading ? (
-          <Loader2 size={18} className="animate-spin" />
+          <Loader2 size={20} className="animate-spin" />
         ) : (
-          <Wallet size={18} />
+          <Wallet size={20} />
         )}
         {loading ? "Procesando..." : "Pagar Seleccionados"}
       </button>
