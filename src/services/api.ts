@@ -1,9 +1,8 @@
 import axios from "axios";
 import { store } from "../store/store";
 
-
 const api = axios.create({
-  baseURL: "http://localhost:8081/api", // tu backend
+  baseURL: "https://water-payments-api.onrender.com/api", // tu backend
 });
 
 // Interceptor para añadir el token automáticamente
