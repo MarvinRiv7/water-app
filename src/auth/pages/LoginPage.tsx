@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import {
   Card,
   CardContent,
@@ -45,7 +45,7 @@ export default function LoginPage() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 px-4">
-    <Toaster/>
+   
       <Card className="w-full max-w-md shadow-lg border border-gray-200">
         <CardHeader className="text-center">
           <div className="mx-auto bg-gradient-to-r from-gray-800 to-gray-800 rounded-full p-4 shadow-md w-fit mb-3">
