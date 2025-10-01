@@ -13,47 +13,60 @@ import type { Mes, Client } from "@/types";
 export default function Payments() {
   const navigate = useNavigate();
 
-  const [clientDui, setClientDui] = useState("");
+  const [searchValue, setSearchValue] = useState("");
   const [mesesDisponibles, setMesesDisponibles] = useState<Mes[]>([]);
   const [seleccionados, setSeleccionados] = useState<Mes[]>([]);
   const [client, setClient] = useState<Client | null>(null);
+  const [coincidencias, setCoincidencias] = useState<Client[]>([]);
   const [loading, setLoading] = useState(false);
 
   const [alertMsg, setAlertMsg] = useState<string | null>(null);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  // 🔹 Fetch cliente y meses desde backend
+  // 🔹 Buscar cliente y meses
   const fetchMeses = async () => {
-    if (!clientDui.trim()) return setAlertMsg("Ingrese un DUI válido");
+    if (!searchValue.trim())
+      return setAlertMsg("Ingrese un DUI o Nombre válido");
+
     setLoading(true);
+    setClient(null);
+    setMesesDisponibles([]);
+    setSeleccionados([]);
+    setCoincidencias([]);
 
     try {
-      const resCliente = await api.get<{ client: Client }>(
-        `/clients/${clientDui}`
-      );
-      const clienteData = resCliente.data.client;
-      setClient(clienteData);
+      const res = await api.get(`/payments/meses-disponibles`, {
+        params: searchValue.includes("-") ? { dui: searchValue } : { nombre: searchValue },
+      });
 
-      if (clienteData.estado !== "Activo") {
-        setMesesDisponibles([]);
-        setSeleccionados([]);
-        return setAlertMsg(
-          `El cliente está ${clienteData.estado} y no puede realizar pagos`
-        );
+      if (res.data.coincidencias) {
+        // 🔹 Se encontraron varios clientes
+        setCoincidencias(res.data.coincidencias);
+        return;
       }
 
-      const resMeses = await api.get<{
-        mesesDisponibles: Mes[];
-      }>(`/payments/${clientDui}/meses-disponibles`);
-
-      // Backend ya devuelve base, mora y monto
-      setMesesDisponibles(resMeses.data.mesesDisponibles);
-      setSeleccionados([]);
+      if (res.data.cliente) setClient(res.data.cliente);
+      if (res.data.mesesDisponibles)
+        setMesesDisponibles(res.data.mesesDisponibles);
     } catch (error) {
       const err = error as AxiosError<{ msg?: string }>;
       setAlertMsg(err.response?.data?.msg || "Error al cargar cliente o meses");
     } finally {
       setLoading(false);
+    }
+  };
+
+  // 🔹 Seleccionar cliente de coincidencias
+  const seleccionarCliente = async (c: Client) => {
+    setClient(c);
+    setCoincidencias([]);
+    try {
+      const resMeses = await api.get(`/payments/meses-disponibles`, {
+        params: { dui: c.dui },
+      });
+      setMesesDisponibles(resMeses.data.mesesDisponibles);
+    } catch {
+      setAlertMsg("Error al cargar meses del cliente seleccionado");
     }
   };
 
@@ -80,12 +93,11 @@ export default function Payments() {
       );
 
       const res = await api.post(
-        `/payments/${clientDui}/pagar-seleccion`,
+        `/payments/${client.dui}/pagar-seleccion`,
         { meses: mesesOrdenados },
         { responseType: "blob" }
       );
 
-      // Descargar PDF
       const url = window.URL.createObjectURL(new Blob([res.data]));
       const link = document.createElement("a");
       link.href = url;
@@ -131,19 +143,39 @@ export default function Payments() {
 
       {/* Buscar cliente */}
       <SearchClient
-        clientDui={clientDui}
-        setClientDui={setClientDui}
+        searchValue={searchValue}
+        setSearchValue={setSearchValue}
         client={client}
         loading={loading}
         fetchMeses={fetchMeses}
       />
+
+      {/* Si hay coincidencias, mostrar lista */}
+      {coincidencias.length > 0 && (
+        <div className="bg-white shadow-md rounded-lg p-4 mb-6">
+          <h4 className="text-gray-700 font-semibold mb-2">
+            Seleccione un cliente:
+          </h4>
+          <ul className="divide-y">
+            {coincidencias.map((c) => (
+              <li
+                key={c.dui}
+                className="p-2 cursor-pointer hover:bg-blue-50 rounded transition"
+                onClick={() => seleccionarCliente(c)}
+              >
+                <p className="font-medium">{c.nombre} {c.apellido}</p>
+                <p className="text-sm text-gray-500">DUI: {c.dui} — {c.estado}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {/* Meses disponibles */}
       <MesesDisponibles
         meses={mesesDisponibles}
         seleccionados={seleccionados}
         toggleMes={toggleMes}
-        
       />
 
       {/* Resumen y pagar */}

@@ -10,7 +10,7 @@ import { Toaster } from "react-hot-toast";
 function App() {
   return (
     <>
-     <Toaster position="top-center" reverseOrder={false} />
+     <Toaster position="top-center" reverseOrder={false} toastOptions={{duration: 3000}} />
     <Routes>
       {/* Login público */}
       <Route path="/login" element={<Login />} />

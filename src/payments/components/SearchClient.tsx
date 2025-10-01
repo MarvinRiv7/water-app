@@ -2,40 +2,20 @@ import { Search, Loader2 } from "lucide-react";
 import type { Client } from "@/types";
 
 type Props = {
-  clientDui: string;
-  setClientDui: (dui: string) => void;
+  searchValue: string;
+  setSearchValue: (value: string) => void;
   client: Client | null;
   loading: boolean;
   fetchMeses: () => void;
 };
 
 export default function SearchClient({
-  clientDui,
-  setClientDui,
+  searchValue,
+  setSearchValue,
   client,
   loading,
   fetchMeses,
 }: Props) {
-  // Función que agrega el guion en la posición 9
-  const formatDui = (value: string) => {
-    // Solo números
-    let digits = value.replace(/\D/g, "");
-
-    // Máximo 9 dígitos (8 + 1)
-    if (digits.length > 9) digits = digits.slice(0, 9);
-
-    // Insertar guion después de 8 dígitos
-    if (digits.length > 8) {
-      return digits.slice(0, 8) + "-" + digits.slice(8);
-    }
-    return digits;
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatDui(e.target.value);
-    setClientDui(formatted);
-  };
-
   return (
     <div className="bg-white rounded-2xl shadow-md border p-6 mb-8 relative">
       {loading && (
@@ -51,9 +31,9 @@ export default function SearchClient({
       <div className="flex gap-3">
         <input
           type="text"
-          placeholder="Ingrese DUI del cliente"
-          value={clientDui}
-          onChange={handleChange}
+          placeholder="Ingrese DUI o Nombre del cliente"
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
           disabled={loading}
           className="flex-1 border rounded-lg px-4 py-2 focus:ring focus:ring-blue-200 outline-none disabled:bg-gray-100"
         />

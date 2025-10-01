@@ -20,18 +20,24 @@ export default function MesesDisponibles({
   const currentMonth = currentDate.getMonth() + 1;
   const currentYear = currentDate.getFullYear();
 
-  const maxYear = 2027;
+  const maxYear = 2028;
   const mesesFiltrados = meses.filter((mes) => mes.anio <= maxYear);
 
   const getBadgeVariant = (mes: Mes) => {
-    if (mes.anio < currentYear || (mes.anio === currentYear && mes.mes < currentMonth))
+    if (
+      mes.anio < currentYear ||
+      (mes.anio === currentYear && mes.mes < currentMonth)
+    )
       return "destructive"; // rojo
     if (mes.anio === currentYear && mes.mes === currentMonth) return "default"; // verde
     return "secondary"; // gris
   };
 
   const getStatusIcon = (mes: Mes) => {
-    if (mes.anio < currentYear || (mes.anio === currentYear && mes.mes < currentMonth))
+    if (
+      mes.anio < currentYear ||
+      (mes.anio === currentYear && mes.mes < currentMonth)
+    )
       return <AlertCircle className="h-4 w-4 text-destructive" />;
     if (mes.anio === currentYear && mes.mes === currentMonth)
       return <CheckCircle2 className="h-4 w-4 text-green-600" />;
@@ -45,16 +51,20 @@ export default function MesesDisponibles({
     <Card className="rounded-2xl shadow-md border">
       <CardHeader className="flex items-center gap-2 pb-3">
         <Calendar className="h-5 w-5 text-gray-600" />
-        <CardTitle className="text-lg text-gray-700">Meses Disponibles</CardTitle>
+        <CardTitle className="text-lg text-gray-700">
+          Meses Disponibles
+        </CardTitle>
       </CardHeader>
 
       <CardContent className="p-2">
         {mesesFiltrados.length === 0 ? (
-          <p className="text-gray-500 italic text-center">No hay meses pendientes.</p>
+          <p className="text-gray-500 italic text-center">
+            No hay meses pendientes.
+          </p>
         ) : (
           <ScrollArea className="max-h-72">
             <ul className="flex flex-wrap gap-2">
-              {mesesFiltrados.map((mes, i) => {
+              {mesesFiltrados.slice(0, 12).map((mes, i) => {
                 const isSelected = seleccionados.some(
                   (m) => m.mes === mes.mes && m.anio === mes.anio
                 );

@@ -9,6 +9,8 @@ export type Mes = {
 
 
 export type Client = {
+  nombre: string
+  apellido: string
   dui: string;
   estado: "Activo" | "Desconectado" | "Exonerado";
   ultimoMes: number;
