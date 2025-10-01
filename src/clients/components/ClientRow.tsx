@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Pencil } from "lucide-react";
+import dayjs from "dayjs";
 
 import type { Client } from "../types/Clients";
 import ConfirmDeleteDialog from "./ConfirmDeleteDialog";
@@ -10,7 +11,25 @@ interface Props {
   setEditingClient: (c: Client) => void;
   handleDelete: (id: string) => void;
 }
-export default function ClientRow({ client, setEditingClient, handleDelete }: Props) {
+
+export default function ClientRow({
+  client,
+  setEditingClient,
+  handleDelete,
+}: Props) {
+  const hoy = dayjs();
+
+  // Último pago registrado (si existe)
+  const ultimoPago = client.lastPayment
+    ? dayjs(`${client.lastPayment.anio}-${client.lastPayment.mes}-01`)
+    : null;
+
+  // Mes anterior al actual (ejemplo: si estamos en octubre → septiembre)
+  const mesAnterior = hoy.subtract(1, "month").startOf("month");
+
+  // Un cliente está al día si su último pago es >= mes anterior
+  const alDia = ultimoPago ? !ultimoPago.isBefore(mesAnterior) : false;
+
   return (
     <>
       {/* Desktop */}
@@ -19,14 +38,18 @@ export default function ClientRow({ client, setEditingClient, handleDelete }: Pr
           {client.nombre} {client.apellido}
         </td>
         <td className="px-4 py-3 text-gray-600">{client.dui}</td>
-        <td className="px-4 py-3 text-gray-600">
+        <td
+          className={`px-4 py-3 ${
+            alDia ? "text-green-600 font-semibold" : "text-red-600 font-semibold"
+          }`}
+        >
           {client.lastPayment?.mes}/{client.lastPayment?.anio}
         </td>
         <td className="px-4 py-3">
           <Badge
             variant={
               client.estado === "Activo"
-                ? "outline"
+                ? "green"
                 : client.estado === "Exonerado"
                 ? "default"
                 : "destructive"
@@ -40,10 +63,10 @@ export default function ClientRow({ client, setEditingClient, handleDelete }: Pr
           <Badge
             variant={
               client.pagoTipo === "maximo"
-                ? "outline"
+                ? "green"
                 : client.pagoTipo === "medio"
                 ? "default"
-                : "destructive"
+                : "blue"
             }
             className="px-3 py-1 text-sm font-medium"
           >
@@ -70,7 +93,7 @@ export default function ClientRow({ client, setEditingClient, handleDelete }: Pr
               {client.nombre} {client.apellido}
             </div>
             <div className="text-gray-600">DUI: {client.dui}</div>
-            <div className="text-gray-600">
+            <div className={`${alDia ? "text-green-600 font-semibold" : "text-red-600 font-semibold"}`}>
               Último pago: {client.lastPayment?.mes}/{client.lastPayment?.anio}
             </div>
             <div className="flex gap-2">
@@ -98,4 +121,3 @@ export default function ClientRow({ client, setEditingClient, handleDelete }: Pr
     </>
   );
 }
-

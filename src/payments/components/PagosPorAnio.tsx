@@ -7,6 +7,7 @@ import { useReactToPrint } from "react-to-print";
 import Swal from "sweetalert2";
 import PagosCliente from "./PagosCliente";
 import PagosPorCliente from "./PagosPorCliente";
+import "../../styles/print.css"; // 👈 Importamos el CSS para impresión
 
 export interface Pago {
   _id: string;
@@ -125,7 +126,6 @@ export default function PagosPorAnio({ anio }: { anio: number }) {
           value={search}
           onChange={(e) => {
             const value = e.target.value;
-
             if (/^[a-zA-Z0-9\s]*$/.test(value)) {
               setSearch(value);
             }
@@ -153,41 +153,61 @@ export default function PagosPorAnio({ anio }: { anio: number }) {
 
       {/* 🔹 Contenido oculto para impresión de TODOS */}
       <div className="hidden">
-        <div ref={printRefTodos} className="p-4 bg-white">
-          <div className="text-center mb-6 border-b pb-2">
-            <h1 className="text-2xl font-extrabold text-gray-800">
-              Reporte de Pagos {anio}
-            </h1>
-            <p className="text-gray-600 mt-1">Sistema de Gestión de Pagos</p>
-          </div>
-
-          {Object.values(pagosPorCliente).map(
-            ({ cliente, pagos }, idx, arr) => (
-              <div key={cliente.dui} className="print:break-after-auto">
-                <PagosCliente cliente={cliente} pagos={pagos} />
-                {(idx + 1) % 2 === 0 && idx !== arr.length - 1 && (
-                  <div className="page-break-after" />
-                )}
-              </div>
-            )
-          )}
-
-          <div className="mt-6 text-right border-t pt-4">
-            <h2 className="text-xl font-bold text-blue-800">
-              Total General (excluyendo exonerados): ${totalGeneral.toFixed(2)}
-            </h2>
-          </div>
+        <div ref={printRefTodos} className="p-4 bg-white print-container">
+          <table className="w-full border-collapse">
+            <thead className="print-header">
+              <tr>
+                <th>
+                  <div className="text-center mb-6 border-b pb-2">
+                    <h1 className="text-2xl font-extrabold text-gray-800">
+                      ADESCO {anio}
+                    </h1>
+                    <p className="text-gray-600 mt-1">
+                      Reporte de pagos {anio}
+                    </p>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {Object.values(pagosPorCliente).map(
+                ({ cliente, pagos }, idx, arr) => (
+                  <tr key={cliente.dui}>
+                    <td>
+                      <div className="print:break-inside-avoid">
+                        <PagosCliente cliente={cliente} pagos={pagos} />
+                      </div>
+                      {(idx + 1) % 2 === 0 && idx !== arr.length - 1 && (
+                        <div className="page-break-after" />
+                      )}
+                    </td>
+                  </tr>
+                )
+              )}
+              <tr>
+                <td>
+                  <div className="mt-6 text-right border-t pt-4">
+                    <h2 className="text-xl font-bold text-black">
+                      Total General (excluyendo exonerados): $
+                      {totalGeneral.toFixed(2)}
+                    </h2>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
-      {/* 🔹 Contenido oculto para impresión de ATRASADOS desde el backend */}
       <div className="hidden">
         <div ref={printRefAtrasados} className="p-4 bg-white">
           <div className="text-center mb-6 border-b pb-2">
-            <h1 className="text-2xl font-extrabold text-red-700">
-              Reporte de Clientes Atrasados {anio}
+            <h1 className="text-2xl font-extrabold text-gray-700">
+              ADESCO {anio}
             </h1>
-            <p className="text-gray-600 mt-1">Sistema de Gestión de Pagos</p>
+            <p className="text-red-600 mt-1">
+              Reporte de clientes atrasados {anio}
+            </p>
           </div>
 
           {atrasados.length === 0 ? (
@@ -195,9 +215,12 @@ export default function PagosPorAnio({ anio }: { anio: number }) {
               No hay clientes atrasados 🎉
             </p>
           ) : (
-            atrasados.map(({ cliente, mesesAtraso, ultimoPago }, idx, arr) => (
-              <div key={cliente.dui} className="print:break-after-auto">
-                <div className="mb-6 border rounded-lg p-4 shadow-sm bg-white">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {atrasados.map(({ cliente, mesesAtraso, ultimoPago }) => (
+                <div
+                  key={cliente.dui}
+                  className="mb-4 border rounded-lg p-4 shadow-sm bg-white break-inside-avoid"
+                >
                   <h2 className="text-lg font-bold text-gray-800">
                     {cliente.nombre} {cliente.apellido}
                   </h2>
@@ -209,11 +232,8 @@ export default function PagosPorAnio({ anio }: { anio: number }) {
                     Último pago: {ultimoPago.mes}/{ultimoPago.anio}
                   </p>
                 </div>
-                {(idx + 1) % 2 === 0 && idx !== arr.length - 1 && (
-                  <div className="page-break-after" />
-                )}
-              </div>
-            ))
+              ))}
+            </div>
           )}
         </div>
       </div>
@@ -236,6 +256,27 @@ export default function PagosPorAnio({ anio }: { anio: number }) {
             />
           </div>
         ))}
+      </div>
+
+      {/* 🔹 Resumen Total al final */}
+      <div className="p-6">
+        <div className="max-w-md mx-auto">
+          <Card className="bg-gradient-to-r from-black to-black text-white shadow-xl rounded-xl">
+            <CardHeader className="text-center pb-2">
+              <CardTitle className="text-lg font-semibold tracking-wide">
+                Resumen Total {anio}
+              </CardTitle>
+            </CardHeader>
+            <div className="text-center py-4">
+              <p className="text-4xl font-extrabold">
+                ${totalGeneral.toFixed(2)}
+              </p>
+              <p className="text-sm opacity-80 mt-1">
+                (Excluyendo clientes exonerados)
+              </p>
+            </div>
+          </Card>
+        </div>
       </div>
     </Card>
   );

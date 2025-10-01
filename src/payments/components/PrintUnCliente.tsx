@@ -42,9 +42,9 @@ const PrintUnCliente = forwardRef<HTMLDivElement, PrintUnClienteProps>(
         {/* Encabezado */}
         <div className="text-center mb-6 border-b pb-2">
           <h1 className="text-2xl font-extrabold text-gray-800">
-            Reporte de Pagos {anio}
+            ADESCO {anio}
           </h1>
-          <p className="text-gray-600 mt-1">Sistema de Gestión de Pagos</p>
+          <p className="text-gray-600 mt-1">Reporte de pagos {anio}</p>
         </div>
 
         {/* Cliente con sus pagos */}
