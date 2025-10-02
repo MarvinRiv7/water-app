@@ -36,7 +36,9 @@ export default function Payments() {
 
     try {
       const res = await api.get(`/payments/meses-disponibles`, {
-        params: searchValue.includes("-") ? { dui: searchValue } : { nombre: searchValue },
+        params: searchValue.includes("-")
+          ? { dui: searchValue }
+          : { nombre: searchValue },
       });
 
       if (res.data.coincidencias) {
@@ -139,6 +141,11 @@ export default function Payments() {
           Gestión de Pagos
         </h2>
         <div />
+        <img
+          src="/logo.jpg" // Asegúrate de tener /public/logo.jpg
+          alt="Logo Adesco"
+          className="w-10 h-10 object-contain"
+        />
       </div>
 
       {/* Buscar cliente */}
@@ -163,8 +170,12 @@ export default function Payments() {
                 className="p-2 cursor-pointer hover:bg-blue-50 rounded transition"
                 onClick={() => seleccionarCliente(c)}
               >
-                <p className="font-medium">{c.nombre} {c.apellido}</p>
-                <p className="text-sm text-gray-500">DUI: {c.dui} — {c.estado}</p>
+                <p className="font-medium">
+                  {c.nombre} {c.apellido}
+                </p>
+                <p className="text-sm text-gray-500">
+                  DUI: {c.dui} — {c.estado}
+                </p>
               </li>
             ))}
           </ul>

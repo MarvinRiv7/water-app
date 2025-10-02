@@ -7,27 +7,29 @@ import AddClientPage from "./clients/pages/AddClientsPage";
 import ProtectedLayout from "./layouts/ProtectedLayout";
 import { Toaster } from "react-hot-toast";
 
-
 function App() {
   return (
     <>
-    <Toaster position="top-center" reverseOrder={false} toastOptions={{duration: 3000}} />
-    <Routes>
-      {/* Login público */}
-      <Route path="/login" element={<Login />} />
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+        toastOptions={{ duration: 3000 }}
+      />
+      <Routes>
+        {/* Login público */}
+        <Route path="/login" element={<Login />} />
 
-      {/* Grupo protegido */}
-      <Route element={<ProtectedLayout />}>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/clients" element={<ClientsPage />} />
-        <Route path="/clients/add" element={<AddClientPage />} />
-        <Route path="/payments" element={<Payments />} />
-      </Route>
+        {/* Grupo protegido */}
+        <Route element={<ProtectedLayout />}>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/clients" element={<ClientsPage />} />
+          <Route path="/clients/add" element={<AddClientPage />} />
+          <Route path="/payments" element={<Payments />} />
+        </Route>
 
-      {/* Fallback */}
-      <Route path="*" element={<Navigate to="/" />} />
-      
-    </Routes>
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
     </>
   );
 }

@@ -60,13 +60,20 @@ export default function ClientsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 p-4 sm:p-6 md:p-8 flex flex-col items-center">
-      {/* Header */}
-      <div className="w-full max-w-6xl">
+      {/* Header con logo */}
+      <div className="w-full max-w-6xl flex items-center justify-between mb-4">
         <ClientsHeader />
+
+        {/* Logo a la derecha */}
+        <img
+          src="/logo.jpg" // Asegúrate que el archivo esté en /public/logo.png
+          alt="Logo Adesco"
+          className="w-12 h-12 object-contain"
+        />
       </div>
 
       {/* Buscador */}
-      <div className="w-full max-w-6xl">
+      <div className="w-full max-w-6xl mb-4">
         <ClientsSearch value={searchTerm} onChange={setSearchTerm} />
       </div>
 

@@ -77,7 +77,7 @@ export default function ClientRow({
           <Button
             onClick={() => setEditingClient(client)}
             size="icon"
-            className="bg-blue-600 hover:bg-blue-700 p-2 transition-colors"
+            className="bg-blue-400 hover:bg-blue-700 p-2 transition-colors"
           >
             <Pencil size={18} />
           </Button>

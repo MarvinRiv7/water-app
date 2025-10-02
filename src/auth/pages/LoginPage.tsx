@@ -45,25 +45,17 @@ export default function LoginPage() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 px-4">
-   
       <Card className="w-full max-w-md shadow-lg border border-gray-200">
         <CardHeader className="text-center">
-          <div className="mx-auto bg-gradient-to-r from-gray-800 to-gray-800 rounded-full p-4 shadow-md w-fit mb-3">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-10 w-10 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 2C8.13 7 6 10.13 6 13a6 6 0 0012 0c0-2.87-2.13-6-6-11z"
-              />
-            </svg>
+          {/* Imagen del logo */}
+          <div className="mx-auto rounded-full p-4 shadow-md w-fit mb-3">
+            <img
+              src="/logo.jpg" // Asegúrate que el archivo sea logo.png en /public
+              alt="Logo Adesco"
+              className="w-16 h-16 object-contain"
+            />
           </div>
+
           <CardTitle className="text-2xl font-bold text-gray-800">
             Sistema Agua Potable Adesco
           </CardTitle>

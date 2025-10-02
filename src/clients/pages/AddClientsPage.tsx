@@ -26,6 +26,7 @@ export default function AddClientPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col">
       {/* Header */}
       <header className="bg-white/90 backdrop-blur-md shadow px-4 sm:px-6 py-4 flex items-center justify-between sticky top-0 z-10">
+        {/* Botón Volver */}
         <Button
           variant="outline"
           onClick={() => navigate("/")}
@@ -34,10 +35,18 @@ export default function AddClientPage() {
           <ArrowLeft size={16} />
           Volver
         </Button>
-        <h1 className="text-xl sm:text-2xl font-bold text-gray-800 tracking-tight">
+
+        {/* Título centrado */}
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-800 tracking-tight text-center flex-1">
           Agregar Cliente
         </h1>
-        <div />
+
+        {/* Logo a la derecha */}
+        <img
+          src="/logo.jpg" // Asegúrate que el archivo esté en /public/logo.jpg
+          alt="Logo Adesco"
+          className="w-10 h-10 object-contain"
+        />
       </header>
 
       {/* Contenido */}
