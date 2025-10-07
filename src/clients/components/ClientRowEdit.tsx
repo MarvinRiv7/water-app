@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Save, X } from "lucide-react";
 import type { Client } from "../types/Clients";
+import { Textarea } from "@/components/ui/textarea";
 
 interface Props {
   editingClient: Client;
@@ -42,6 +43,17 @@ export default function ClientRowEdit({
             className="h-10"
           />
         </td>
+        {/* Referencia */}
+        <td className="px-4 py-3">
+          <Textarea
+            value={editingClient.referencia ?? ""}
+            onChange={(e) =>
+              setEditingClient({ ...editingClient, referencia: e.target.value })
+            }
+            placeholder="Referencia"
+            className="h-20 resize-none" // altura inicial y sin resize
+          />
+        </td>
 
         {/* DUI */}
         <td className="px-4 py-3">{editingClient.dui}</td>
@@ -50,13 +62,19 @@ export default function ClientRowEdit({
         <td className="px-4 py-3 flex gap-2">
           <Input
             type="number"
-            value={editingClient.ultimoMes ?? editingClient.lastPayment?.mes ?? 1}
+            value={
+              editingClient.ultimoMes ?? editingClient.lastPayment?.mes ?? 1
+            }
             disabled
             className="w-20 h-10 bg-gray-100 cursor-not-allowed"
           />
           <Input
             type="number"
-            value={editingClient.ultimoAnio ?? editingClient.lastPayment?.anio ?? 2025}
+            value={
+              editingClient.ultimoAnio ??
+              editingClient.lastPayment?.anio ??
+              2025
+            }
             disabled
             className="w-24 h-10 bg-gray-100 cursor-not-allowed"
           />
@@ -67,7 +85,10 @@ export default function ClientRowEdit({
           <Select
             value={editingClient.estado}
             onValueChange={(val) =>
-              setEditingClient({ ...editingClient, estado: val as Client["estado"] })
+              setEditingClient({
+                ...editingClient,
+                estado: val as Client["estado"],
+              })
             }
           >
             <SelectTrigger className="h-10">
@@ -86,7 +107,10 @@ export default function ClientRowEdit({
           <Select
             value={editingClient.pagoTipo}
             onValueChange={(val) =>
-              setEditingClient({ ...editingClient, pagoTipo: val as Client["pagoTipo"] })
+              setEditingClient({
+                ...editingClient,
+                pagoTipo: val as Client["pagoTipo"],
+              })
             }
           >
             <SelectTrigger className="h-10">
@@ -98,6 +122,21 @@ export default function ClientRowEdit({
               <SelectItem value="minimo">Mínimo</SelectItem>
             </SelectContent>
           </Select>
+        </td>
+
+        {/* Observaciones */}
+        <td className="px-4 py-3">
+          <Textarea
+            value={editingClient.observaciones ?? ""}
+            onChange={(e) =>
+              setEditingClient({
+                ...editingClient,
+                observaciones: e.target.value,
+              })
+            }
+            placeholder="Observaciones"
+            className="h-24 resize-none" // altura inicial y sin resize
+          />
         </td>
 
         {/* Botones Guardar / Cancelar */}
@@ -122,7 +161,7 @@ export default function ClientRowEdit({
 
       {/* 📱 Versión card (mobile) */}
       <tr className="md:hidden">
-        <td colSpan={6} className="px-4 py-3">
+        <td colSpan={8} className="px-4 py-3">
           <div className="bg-blue-50 p-4 rounded-xl shadow-sm space-y-3">
             {/* Nombre y Apellido */}
             <div className="grid grid-cols-1 gap-2">
@@ -136,11 +175,26 @@ export default function ClientRowEdit({
               <Input
                 value={editingClient.apellido}
                 onChange={(e) =>
-                  setEditingClient({ ...editingClient, apellido: e.target.value })
+                  setEditingClient({
+                    ...editingClient,
+                    apellido: e.target.value,
+                  })
                 }
                 placeholder="Apellido"
               />
+              <Textarea
+                value={editingClient.referencia ?? ""}
+                onChange={(e) =>
+                  setEditingClient({
+                    ...editingClient,
+                    referencia: e.target.value,
+                  })
+                }
+                placeholder="Referencia"
+                className="h-20 resize-none"
+              />
             </div>
+            {/* Referencia */}
 
             {/* DUI */}
             <p className="text-sm text-gray-700">
@@ -151,13 +205,19 @@ export default function ClientRowEdit({
             <div className="flex gap-2">
               <Input
                 type="number"
-                value={editingClient.ultimoMes ?? editingClient.lastPayment?.mes ?? 1}
+                value={
+                  editingClient.ultimoMes ?? editingClient.lastPayment?.mes ?? 1
+                }
                 disabled
                 className="bg-gray-100 cursor-not-allowed"
               />
               <Input
                 type="number"
-                value={editingClient.ultimoAnio ?? editingClient.lastPayment?.anio ?? 2025}
+                value={
+                  editingClient.ultimoAnio ??
+                  editingClient.lastPayment?.anio ??
+                  2025
+                }
                 disabled
                 className="bg-gray-100 cursor-not-allowed"
               />
@@ -167,7 +227,10 @@ export default function ClientRowEdit({
             <Select
               value={editingClient.estado}
               onValueChange={(val) =>
-                setEditingClient({ ...editingClient, estado: val as Client["estado"] })
+                setEditingClient({
+                  ...editingClient,
+                  estado: val as Client["estado"],
+                })
               }
             >
               <SelectTrigger>
@@ -184,7 +247,10 @@ export default function ClientRowEdit({
             <Select
               value={editingClient.pagoTipo}
               onValueChange={(val) =>
-                setEditingClient({ ...editingClient, pagoTipo: val as Client["pagoTipo"] })
+                setEditingClient({
+                  ...editingClient,
+                  pagoTipo: val as Client["pagoTipo"],
+                })
               }
             >
               <SelectTrigger>
@@ -196,6 +262,19 @@ export default function ClientRowEdit({
                 <SelectItem value="minimo">Mínimo</SelectItem>
               </SelectContent>
             </Select>
+
+            {/* Observaciones */}
+            <Textarea
+              value={editingClient.observaciones ?? ""}
+              onChange={(e) =>
+                setEditingClient({
+                  ...editingClient,
+                  observaciones: e.target.value,
+                })
+              }
+              placeholder="Observaciones"
+              className="h-24 resize-none"
+            />
 
             {/* Botones */}
             <div className="flex justify-end gap-3 pt-2">

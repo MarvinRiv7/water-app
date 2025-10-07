@@ -3,9 +3,11 @@ export interface Client {
   dui: string;
   nombre: string;
   apellido: string;
+  referencia?: string
   ultimoMes: number;
   ultimoAnio: number;
   lastPayment: { mes: number; anio: number };
   estado: "Activo" | "Desconectado" | "Exonerado";
   pagoTipo: "maximo" | "medio" | "minimo";
+  observaciones?: string
 }

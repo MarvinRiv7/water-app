@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "react-hot-toast";
 
-// ✅ Esquema Zod actualizado con tipo de pago
+// ✅ Esquema Zod actualizado con tipo de pago y nuevos campos
 const clientSchema = z.object({
   dui: z.string().regex(/^\d{8}-\d{1}$/, {
     message:
@@ -27,7 +27,6 @@ const clientSchema = z.object({
         "El nombre solo puede contener letras, espacios, guiones y comas",
     })
     .min(3, { message: "El nombre debe tener al menos 3 caracteres" }),
-
   apellido: z
     .string()
     .regex(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s\-,]+$/, {
@@ -35,6 +34,9 @@ const clientSchema = z.object({
         "El apellido solo puede contener letras, espacios, guiones y comas",
     })
     .min(3, { message: "El apellido debe tener al menos 3 caracteres" }),
+
+  referencia: z.string().optional(),
+  observaciones: z.string().optional(),
 
   ultimoMes: z
     .number()
@@ -70,6 +72,8 @@ export function ClientForm({ onSubmit, loading }: ClientFormProps) {
       dui: "",
       nombre: "",
       apellido: "",
+      referencia: "",
+      observaciones: "",
       ultimoMes: 1,
       ultimoAnio: new Date().getFullYear(),
       estado: "Activo",
@@ -143,6 +147,23 @@ export function ClientForm({ onSubmit, loading }: ClientFormProps) {
               {errors.apellido && (
                 <p className="text-red-500 text-sm">
                   {errors.apellido.message}
+                </p>
+              )}
+            </div>
+
+            {/* Referencia */}
+            <div className="sm:col-span-2">
+              <Label className="mb-2" htmlFor="referencia">
+                Referencia
+              </Label>
+              <Input
+                {...register("referencia")}
+                placeholder="Ej: Cerca del parque central"
+                className={errors.referencia ? "border-red-500" : ""}
+              />
+              {errors.referencia && (
+                <p className="text-red-500 text-sm">
+                  {errors.referencia.message}
                 </p>
               )}
             </div>
@@ -232,6 +253,23 @@ export function ClientForm({ onSubmit, loading }: ClientFormProps) {
               {errors.pagoTipo && (
                 <p className="text-red-500 text-sm">
                   {errors.pagoTipo.message}
+                </p>
+              )}
+            </div>
+
+            {/* Observaciones */}
+            <div className="sm:col-span-2">
+              <Label className="mb-2" htmlFor="observaciones">
+                Observaciones
+              </Label>
+              <Input
+                {...register("observaciones")}
+                placeholder="Observaciones..."
+                className={errors.observaciones ? "border-red-500" : ""}
+              />
+              {errors.observaciones && (
+                <p className="text-red-500 text-sm">
+                  {errors.observaciones.message}
                 </p>
               )}
             </div>

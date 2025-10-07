@@ -17,7 +17,7 @@ export function useClients() {
         ? res.data
         : res.data.clients || res.data.client || [];
 
-      // 🔹 Añadir lastPayment y pagoTipo si no existen
+      // 🔹 Añadir lastPayment, pagoTipo, referencia y observaciones si no existen
       const clientsWithLastPayment = clientsData.map((c) => ({
         ...c,
         ultimoMes: c.ultimoMes ?? 1,
@@ -28,6 +28,8 @@ export function useClients() {
           anio: c.ultimoAnio ?? 2025,
         },
         estado: c.estado || "Activo",
+        referencia: c.referencia || "",
+        observaciones: c.observaciones || "",
       }));
 
       setClients(clientsWithLastPayment);
@@ -38,41 +40,46 @@ export function useClients() {
       setLoading(false);
     }
   };
-const updateClient = async (client: Client) => {
-  if (!client._id) return;
 
-  // ✅ Solo enviar los campos editables
-  const dataToUpdate = {
-    nombre: client.nombre,
-    apellido: client.apellido,
-    estado: client.estado,
-    pagoTipo: client.pagoTipo,
+  // 🔹 Actualizar cliente
+  const updateClient = async (client: Client) => {
+    if (!client._id) return;
+
+    // ✅ Solo enviar los campos editables
+    const dataToUpdate = {
+      nombre: client.nombre,
+      apellido: client.apellido,
+      estado: client.estado,
+      pagoTipo: client.pagoTipo,
+      referencia: client.referencia,
+      observaciones: client.observaciones,
+    };
+
+    const res = await api.put(`/clients/${client._id}`, dataToUpdate);
+
+    // Aseguramos lastPayment, pagoTipo, referencia y observaciones en la respuesta
+    const updatedClient: Client = {
+      ...res.data.client,
+      ultimoMes: res.data.client.ultimoMes ?? 1,
+      ultimoAnio: res.data.client.ultimoAnio ?? 2025,
+      pagoTipo: res.data.client.pagoTipo || "maximo",
+      lastPayment:
+        res.data.client.lastPayment || {
+          mes: res.data.client.ultimoMes ?? 1,
+          anio: res.data.client.ultimoAnio ?? 2025,
+        },
+      estado: res.data.client.estado || "Activo",
+      referencia: res.data.client.referencia || "",
+      observaciones: res.data.client.observaciones || "",
+    };
+
+    // actualizar en el state
+    setClients((prev) =>
+      prev.map((c) => (c._id === updatedClient._id ? updatedClient : c))
+    );
+
+    return updatedClient;
   };
-
-  const res = await api.put(`/clients/${client._id}`, dataToUpdate);
-
-  // Aseguramos lastPayment y pagoTipo en la respuesta
-  const updatedClient: Client = {
-    ...res.data.client,
-    ultimoMes: res.data.client.ultimoMes ?? 1,
-    ultimoAnio: res.data.client.ultimoAnio ?? 2025,
-    pagoTipo: res.data.client.pagoTipo || "maximo",
-    lastPayment:
-      res.data.client.lastPayment || {
-        mes: res.data.client.ultimoMes ?? 1,
-        anio: res.data.client.ultimoAnio ?? 2025,
-      },
-    estado: res.data.client.estado || "Activo",
-  };
-
-  // actualizar en el state
-  setClients((prev) =>
-    prev.map((c) => (c._id === updatedClient._id ? updatedClient : c))
-  );
-
-  return updatedClient;
-};
-
 
   // 🔹 Eliminar cliente
   const deleteClient = async (id: string) => {

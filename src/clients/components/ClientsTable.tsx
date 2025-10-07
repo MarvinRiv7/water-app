@@ -40,10 +40,12 @@ export default function ClientsTable({
               <TableHeader>
                 <TableRow className="bg-blue-100">
                   <TableHead>Nombre</TableHead>
+                  <TableHead>Referencia</TableHead>
                   <TableHead>DUI</TableHead>
                   <TableHead>Último Pago</TableHead>
                   <TableHead>Estado</TableHead>
                   <TableHead>Tipo de Pago</TableHead>
+                  <TableHead>Observaciones</TableHead>
                   <TableHead className="text-center">Acciones</TableHead>
                 </TableRow>
               </TableHeader>
