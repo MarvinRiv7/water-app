@@ -11,7 +11,7 @@ interface DecodedToken {
   [key: string]: any;
 }
 
-// ✅ Revisar si hay un token válido en sessionStorage
+//Revisar si hay un token válido en sessionStorage
 function getValidToken(): string | null {
   const token = sessionStorage.getItem("token");
   if (!token) return null;
@@ -39,7 +39,7 @@ const authSlice = createSlice({
   reducers: {
     loginSuccess: (state, action: PayloadAction<string>) => {
       state.token = action.payload;
-      sessionStorage.setItem("token", action.payload); // ✅ usar sessionStorage
+      sessionStorage.setItem("token", action.payload); //usar sessionStorage
     },
     logout: (state) => {
       state.token = null;

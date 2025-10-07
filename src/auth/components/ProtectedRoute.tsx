@@ -1,4 +1,3 @@
-// src/auth/components/ProtectedRoute.tsx
 import { useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,13 +14,13 @@ const ProtectedRoute = ({ children }: { children: React.ReactElement }) => {
       try {
         const { exp }: { exp: number } = jwtDecode(token);
 
-        // 🕒 tiempo que falta para expirar en ms
+        //tiempo que falta para expirar en ms
         const timeLeft = exp * 1000 - Date.now();
 
         if (timeLeft <= 0) {
           dispatch(logout()); // ya vencido → logout inmediato
         } else {
-          // ✅ programar logout automático cuando llegue la expiración
+          //programar logout automático cuando llegue la expiración
           const timer = setTimeout(() => {
             dispatch(logout());
           }, timeLeft);

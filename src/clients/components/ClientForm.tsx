@@ -22,16 +22,20 @@ const clientSchema = z.object({
   }),
   nombre: z
     .string()
-    .regex(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/, {
-      message: "El nombre solo puede contener letras y espacios",
+    .regex(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s\-,]+$/, {
+      message:
+        "El nombre solo puede contener letras, espacios, guiones y comas",
     })
     .min(3, { message: "El nombre debe tener al menos 3 caracteres" }),
+
   apellido: z
     .string()
-    .regex(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/, {
-      message: "El apellido solo puede contener letras y espacios",
+    .regex(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s\-,]+$/, {
+      message:
+        "El apellido solo puede contener letras, espacios, guiones y comas",
     })
     .min(3, { message: "El apellido debe tener al menos 3 caracteres" }),
+
   ultimoMes: z
     .number()
     .min(1, { message: "El mes mínimo es 1" })

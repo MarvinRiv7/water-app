@@ -50,7 +50,7 @@ export default function LoginPage() {
           {/* Imagen del logo */}
           <div className="mx-auto rounded-full p-4 shadow-md w-fit mb-3">
             <img
-              src="/logo.jpg" // Asegúrate que el archivo sea logo.png en /public
+              src="/logo.jpg"
               alt="Logo Adesco"
               className="w-16 h-16 object-contain"
             />
