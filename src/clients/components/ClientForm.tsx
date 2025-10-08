@@ -16,9 +16,9 @@ import { toast } from "react-hot-toast";
 
 // ✅ Esquema Zod actualizado con tipo de pago y nuevos campos
 const clientSchema = z.object({
-  dui: z.string().regex(/^\d{8}-\d{1}$/, {
+  dui: z.string().regex(/^\d{8}-\d+$/, {
     message:
-      "El DUI debe tener 8 dígitos, un guion y 1 dígito final (ej: 01234567-8)",
+      "El DUI debe tener al menos 8 dígitos, un guion y 1 dígito final (ej: 01234567-8)",
   }),
   nombre: z
     .string()

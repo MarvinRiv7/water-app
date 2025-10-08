@@ -173,8 +173,11 @@ export default function Payments() {
                 <p className="font-medium">
                   {c.nombre} {c.apellido}
                 </p>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-500 font-bold">
                   DUI: {c.dui} — {c.estado}
+                </p>
+                <p className="text-sm text-gray-500 font-bold">
+                  Referencia: {c.referencia}
                 </p>
               </li>
             ))}
